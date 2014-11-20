@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>Good Reviews</title>
+  
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/grids-responsive-min.css">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="tmp/css/app.css">
+  <link rel="stylesheet" href="tmp/css/progressjs.css">
+  <link rel="stylesheet" href="tmp/css/vex.css" />
+  <link rel="stylesheet" href="tmp/css/vex-theme-default.css" />
+</head>
+
+<body id="home">
+  <div class="header">
+    <div class="home-menu pure-menu pure-menu-open pure-menu-horizontal">
+      <a class="pure-menu-heading" href="javascript:;">Good Reviews</a>
+      <ul>
+        <li class="pure-menu-selected"><a href="javascript:;"><span data-bind="visible: loggedIn">Logged in as <span data-bind="text: userName"></span></div></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bookshelf" style="display: none;">
+    <!-- ko foreach: books -->
+      <div class="book" data-bind="click: $parent.selectBook, css: { selected: selected }">
+        <div class="book-cover"></div>
+        <form class="pure-form pure-form-stacked">
+          <legend data-bind="text: title"></legend>
+          <img class="cover-image" data-bind="attr: { src: coverImageSrc }"></img>
+          <div>Goodreads Id: <span data-bind="text: goodreadsId"></span></div>
+        </form>
+      </div>  
+    <!-- /ko -->
+    <div class="book new">
+      <form class="pure-form pure-form-stacked">
+        <legend>New Book</legend>
+        <i class="fa fa-plus" style="font-size: 10em; margin-left: 32px; color: rgb(59, 144, 60);"></i>
+        <input type='text' style="width: 100%" placeholder="goodreads id" data-bind="value: newBookGoodreadsId">
+        <button type="submit" class="pure-button pure-button-primary" data-bind="html: addNewBookContent, enable: !newBookLoading(), click: addNewBook">Add Book</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="book-details-container" style="width: 100%; float: left;">
+    <div class="book-details" data-bind="visible: bookSelected, with: selectedBook">
+       <form class="pure-form pure-form-stacked">
+         <legend data-bind="text: title"></legend>
+         <div class="pure-grid">
+           <div class="pure-u-1-2" style="margin-right: -5px;">
+             <div style="border-right: 1px solid rgb(56, 33, 16);">
+               <label for="message-subject">Subject</label>
+               <input type="text" data-bind="value: messageSubject">
+               <label for="message-body">Body</label>
+               <textarea id="message-body" data-bind="value: messageBody" style="width: 100%; height: 250px;"></textarea>
+               <button type="submit" class="pure-button pure-button-primary" data-bind="html: $parent.saveBookContent, enable: !$parent.saveBookLoading(), click: $parent.saveBook">Save</button>
+             </div>
+           </div>
+           <div class="pure-u-1-2">
+             <div data-bind="visible: noReviews">
+               <span>This book has no reviews with text.</span>
+             </div>
+             <div data-bind="visible: complete">
+               <span>All messages have been sent or skipped for this book!</span>
+             </div>
+             <div data-bind="visible: reviewLoading">
+               <span><i class=\"fa fa-spinner fa-spin\"></i> Loading reviews...</span>
+             </div>
+             <div data-bind="visible: !!currentReview()">
+               <span data-bind="text: progressText"></span>
+               <div data-bind="with: currentReview">
+                 <label>Review</label>
+                 <div id="review-body" data-bind="html: body"></div>
+                 <button type="submit" class="pure-button pure-button-primary" data-bind="html: $parent.getFullReviewContent, enable: !$parent.gettingFullReview(), click: $parent.getFullReview, visible: hasMore">Full Review</button>
+                 <button type="submit" class="pure-button pure-button-primary" data-bind="html: $parent.sendMessageContent, enable: !$parent.sendingMessage(), click: $parent.sendMessage">Send</button>
+                 <button type="submit" class="pure-button pure-button-primary" data-bind="html: $parent.skipReviewContent, enable: !$parent.skippingReview(), click: $parent.skipReview">Skip</button>
+                 <button type="submit" class="pure-button pure-button-primary" data-bind="html: $parent.sendAllContent, enable: !$parent.sendingAll(), click: $parent.sendAll">Send All</button>
+               </div>
+             </div>
+           </div>
+         </div>
+       </form>
+    </div>
+  </div>
+
+  <div class="splash">
+    <h1 class="splash-head">First: Sign In to Goodreads</h1>
+    <form id="sign-in-form" class="pure-form" action="/signIn" method="post">
+      <fieldset>
+        <legend></legend>
+          <input type="email" placeholder="Email" name="email">
+          <input type="password" placeholder="Password" name="password">
+          <button type="submit" class="pure-button pure-button-primary" data-bind="html: signInContent, enable: !signInLoading()">Sign In</button>
+      </fieldset>
+    </form>
+  </div>
+
+  <script type="text/javascript" src="tmp/js/jquery.js"></script>
+  <script type="text/javascript" src="tmp/js/jquery.form.js"></script>
+  <script type="text/javascript" src="tmp/js/knockout.debug.js"></script>
+  <script type="text/javascript" src="tmp/js/ko.components.js"></script>
+  <script type="text/javascript" src="tmp/js/ko.loadingWhen.js"></script>
+  <script type="text/javascript" src="tmp/js/lodash.js"></script>
+  <script type="text/javascript" src="tmp/js/progress.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <!--[if lt IE 9]>
+    <script type="text/javascript" src="/js/excanvas.js"></script>
+  <![endif]-->
+  <script type="text/javascript" src="/js/spinners.min.js"></script>
+  <script type="text/javascript" src="tmp/js/app.js"></script>
+  <script type="text/javascript" src="tmp/js/vex.combined.min.js"></script>
+  <script type="text/javascript">vex.defaultOptions.className = 'vex-theme-default';</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "diegallantly",
+  "version": "0.0.0",
+  "authors": [
+    "Agon <diegallantly@gmail.com>"
+  ],
+  "main": "app.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "~3.2.0",
+    "jquery": "~2.1.1",
+    "jquery-cookie": "~1.4.1",
+    "jquery-form": "~3.46.0",
+    "progress.js": "~0.1.0",
+    "vex": "~2.2.1"
+  }
+}

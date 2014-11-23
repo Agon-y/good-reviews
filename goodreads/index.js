@@ -404,7 +404,6 @@ exports.sendMessageWithCaptcha = function(data, reviewGoodreadsId, captchaCode) 
 
   form["message[subject]"] = subject;
   form["message[body_usertext]"] = body;
-  form["message[to_user_id]"] = 9936913; //only send to Joelhoward for testing purposes
   form["recaptcha_repsonse_field"] = 'manual_challenge';
   form["recaptcha_challenge_field"] = captchaCode;
   

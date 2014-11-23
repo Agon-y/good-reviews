@@ -61,7 +61,7 @@
     });
     self.addBook = function(book) {
       var bookExists = !!ko.utils.arrayFirst(this.books(), function(existingBook) {
-        return book.goodreadsId = existingBook.goodreadsId;
+        return book.goodreadsId == existingBook.goodreadsId;
       });
 
       if (bookExists)

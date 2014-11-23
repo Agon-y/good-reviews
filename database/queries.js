@@ -152,8 +152,9 @@ exports.getReviewData = function(goodreadsId) {
     'select *,\n' +
     '(select count(*) from goodreadsreview where Status = \'Sent\' or Status = \'Skipped\' and bookGoodreadsId = goodreadsBook.goodreadsId) as completedCount\n' +
     'from goodreadsbook\n' +
-    'left join (select bookGoodreadsId, goodreadsId as reviewGoodreadsId, author, body, `status` from goodreadsreview where Status = \'None\') as nextReview on nextReview.bookGoodreadsId = goodreadsBook.goodreadsId\n' +
-    'where goodreadsBook.goodreadsId = ?\n' +
+    'left join (select bookGoodreadsId, goodreadsId as reviewGoodreadsId, author, authorGoodreadsId, body, `status` from goodreadsreview where Status = \'None\') as nextReview on nextReview.bookGoodreadsId = goodreadsBook.goodreadsId\n' +
+    'left join (select bookGoodreadsId, authorGoodreadsId from goodreadsreview where Status != \'None\') as alreadySentReview on alreadySentReview.authorGoodreadsId = nextReview.authorGoodreadsId\n' +
+    'where goodreadsBook.goodreadsId = ? and alreadySentReview.bookGoodreadsId is null\n' +
     'order by nextReview.reviewGoodreadsId\n' + 
     'limit 1';
 
